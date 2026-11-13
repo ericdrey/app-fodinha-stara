@@ -1,0 +1,14 @@
+{
+  "name": "fodinha-marcador",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Placar de Fodinha dividido por participante, com vidas, palpites e regras",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "dev": "node tools/build.mjs && node server.cjs",
+    "start": "node server.cjs",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {"node": ">=22.13"}
+}

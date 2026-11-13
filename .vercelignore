@@ -1,0 +1,10 @@
+data/
+tmp/
+tests/
+node_modules/
+.git/
+.env*
+*.sqlite*
+README.md
+public/
+output/

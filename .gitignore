@@ -1,0 +1,8 @@
+data/
+node_modules/
+tmp/
+public/
+output/
+.vercel/
+.env*
+!.env.example

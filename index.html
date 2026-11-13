@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#00663B" />
+  <meta name="description" content="Marque palpites, vazas, vidas e eliminações do Fodinha com baralho espanhol." />
+  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <title>Fodinha · Mesa do almoço</title>
+  <style>:root{color-scheme:dark;--bg:#101412;--panel:#1a201c;--ink:#f2f4ee;--muted:#a6b3aa;--line:#354138;--green:#00663B;--orange:#F37435;--primary:var(--green);--secondary:var(--orange);--on-primary:#fff;--primary-ink:#9bdbb6;--on-secondary:#24170f;--secondary-ink:#f5ae83;--soft:#213329;--red:#a44938;--radius:12px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{cursor:default;opacity:.35}button,input,select{min-width:0}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}h1,h2,p{margin:0}h1,h2{letter-spacing:-.03em}a{color:var(--primary-ink)}button{color:inherit}input,select{border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}input{padding:10px 12px}select{padding:10px;min-height:46px}summary{cursor:pointer}button{border-radius:8px}.button{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--panel);min-height:48px;padding:10px 16px;font-weight:650}.button.primary{background:var(--primary);color:var(--on-primary);border-color:var(--primary-ink)}.button.primary:disabled{opacity:1;background:#303c33;border-color:#303c33;color:#a6b3aa}.button.quiet{background:var(--bg)}.button.full{width:100%}.text-button{border:0;background:transparent;color:var(--primary-ink);min-height:44px;padding:8px 10px;font-size:14px}.icon-button{border:0;background:transparent;width:44px;height:44px;font-size:26px}.page-header{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:900px;margin:auto;padding:10px 16px;min-height:64px}.page-header>strong{font-size:20px}.page-main{max-width:900px;margin:0 auto;padding:12px 16px 40px}.page-intro{margin:8px 0 22px}.page-intro h1{font-size:28px;font-weight:650}.page-intro p{color:var(--muted);font-size:13px;margin-top:8px}.settings-wrap{max-width:520px;margin:auto}.settings-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}.field-caption{display:block;font-size:13px;font-weight:600;margin-bottom:7px}.select-input{display:block;width:100%}.setup-players{display:grid;gap:9px;margin:20px 0 24px}.setup-row{display:flex;align-items:center;gap:10px}.setup-row>span{font-size:12px;color:var(--muted);width:18px;text-align:center;flex:none}.setup-row input{flex:1;width:100%;font-size:16px;min-height:46px}.settings-options{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px}.settings-options>label{font-size:13px;font-weight:600}.settings-options select{margin-top:7px;font-weight:400}.settings-card>.button{margin-top:26px}
+/* A partida divide a área disponível entre todos os participantes. */
+.game-shell{height:100vh;height:100svh;height:100dvh;display:grid;grid-template-areas:'toolbar' 'warning' 'players' 'actions';grid-template-rows:auto auto minmax(0,1fr) auto;background:var(--line)}.game-toolbar{grid-area:toolbar;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;background:var(--panel);padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));min-height:64px;border-bottom:1px solid var(--line)}.game-toolbar>strong{font-size:17px;letter-spacing:-.03em}.menu-button{display:inline-flex;align-items:center;gap:7px;justify-self:start;border:0;background:transparent;padding:8px 4px;min-height:44px;font-size:17px}.menu-button span{font-size:13px}.cards-control{display:flex;align-items:center;justify-self:end;gap:7px;font-size:12px;color:var(--muted)}.cards-control select{padding:6px 5px;min-height:40px;max-width:62px;min-width:50px;font-size:18px;font-weight:650;border:1px solid var(--line);color:var(--ink)}.game-shell>#connection-banner{grid-area:warning}.participant-grid{grid-area:players;min-width:0;min-height:0;display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr));grid-template-rows:repeat(var(--rows),minmax(0,1fr));gap:1px;background:var(--line);margin:0}.participant-block{min-height:0;min-width:0;background:var(--panel);padding:14px 12px 12px;display:flex;flex-direction:column;position:relative;overflow:auto}.participant-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;flex:none;min-height:24px}.participant-heading h2{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:650;line-height:1.4}.foot-marker{font-size:8px;margin-left:5px;letter-spacing:.02em;font-weight:500;color:var(--muted)}.participant-lives{white-space:nowrap;font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}.participant-lives>span{font-size:12px;color:var(--red);vertical-align:middle}.participant-values{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin:auto;align-items:center;padding:10px 0}.score-control{display:flex;flex-direction:column;align-items:center;min-width:0;gap:4px}.score-control label{font-size:12px;color:var(--muted);font-weight:500}.score-control input{appearance:textfield;-moz-appearance:textfield;text-align:center;border:0;border-radius:6px;background:transparent;color:var(--ink);font-size:clamp(36px,7vh,64px);font-weight:650;line-height:1;width:100%;height:1.15em;padding:0;letter-spacing:-.05em;font-variant-numeric:tabular-nums}.score-control input::placeholder{color:#a7b1a2}.score-control input::-webkit-inner-spin-button,.score-control input::-webkit-outer-spin-button{appearance:none;margin:0}.counter-buttons{display:flex;width:100%;max-width:100px;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:3px;flex:none}.score-step{width:50%;min-height:44px;min-width:0;border:0;background:#263129;font-size:22px;font-weight:400;line-height:1;padding:0;border-radius:0}.score-step+button{border-left:1px solid var(--line)}.score-step:active{background:var(--secondary)}.participant-status{color:var(--muted);font-size:11px;text-align:center;position:absolute;bottom:5px;left:0;right:0;pointer-events:none}.participant-block.is-out{background:#141a16}.is-out .participant-heading,.is-out .participant-values{opacity:.4}.is-out .participant-status{color:var(--muted)}.participant-block.is-winner{background:#173525}.is-winner .participant-status{font-weight:700;color:var(--secondary-ink)}.round-actions{grid-area:actions;background:var(--panel);border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}.round-actions p{font-size:11px;color:var(--muted);line-height:1.4;text-align:center;margin:0 0 6px;min-height:16px}.round-actions .button{min-height:48px;font-size:16px;max-width:600px;display:flex;margin:auto}.participant-grid[data-count='3'] .participant-values{padding:4px 0}.participant-grid[data-count='7'] .score-control input,.participant-grid[data-count='8'] .score-control input{font-size:34px;height:40px}.participant-grid[data-count='7'] .score-step,.participant-grid[data-count='8'] .score-step{min-height:36px}.participant-grid[data-count='7'] .participant-block,.participant-grid[data-count='8'] .participant-block{padding-top:9px;padding-bottom:9px}.participant-grid[data-count='7'] .participant-values,.participant-grid[data-count='8'] .participant-values{padding:4px 0}.participant-grid[data-count='7'] .score-control,.participant-grid[data-count='8'] .score-control{gap:2px}
+.menu-dialog,.share-dialog{width:calc(100% - 32px);max-width:400px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);padding:18px;max-height:85vh;max-height:85dvh;overflow:auto}.menu-dialog::backdrop,.share-dialog::backdrop{background:#00000099}.menu-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.menu-heading h2{font-size:20px;font-weight:650}.menu-items{display:grid}.menu-item{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;min-height:48px;padding:12px 4px;font-size:15px}.menu-corrections summary{font-size:14px;min-height:48px;padding:14px 4px;color:var(--muted)}.menu-corrections .field-caption{margin-top:8px}.sync-state{display:block;font-size:12px;color:var(--muted);margin-top:16px}.nested-form{display:grid;gap:12px;padding:16px 0;border-top:1px solid var(--line);margin-top:10px}.nested-form label{font-size:13px;display:grid;gap:5px}.nested-form input,.nested-form select{width:100%;min-height:44px;font-size:16px}.nested-form p{font-size:12px;color:var(--muted)}.share-dialog h2{font-size:23px}.share-dialog p{font-size:13px;color:var(--muted);margin:12px 0}.share-dialog input{width:100%;font-size:16px;min-height:46px}.share-dialog .button{margin-top:10px}.connection-warning{background:#38271c;color:#f4c5a2;padding:12px;font-size:12px}.connection-warning p{margin:5px 0 8px}.connection-warning button{margin-right:6px}.toast{position:fixed;bottom:calc(94px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#263f2f;color:#fff;padding:10px 16px;font-size:13px;border-radius:8px;z-index:40;max-width:calc(100% - 32px);width:max-content;pointer-events:none}.toast.error{background:#713b30}.toast[hidden]{display:none}.startup{display:flex;min-height:90vh;align-items:center;justify-content:center;flex-direction:column;padding:24px;text-align:center;gap:16px}.startup h1{font-size:32px}.startup p{color:var(--muted);max-width:400px;font-size:14px}
+/* Consulta de regras preservada em seções recolhíveis. */
+.content-wrap{max-width:900px;margin:0 auto}.rule-list{padding:8px 24px;background:var(--panel);border:1px solid var(--line);border-radius:16px}.rule-details{border-bottom:1px solid var(--line)}.rule-details:last-child{border-bottom:0}.rule-details summary{list-style:none;cursor:pointer;padding:20px 2px;display:flex;align-items:center;gap:16px}.rule-details summary::-webkit-details-marker{display:none}.rule-index{font-size:11px;color:var(--primary-ink);font-weight:800;background:var(--soft);height:32px;width:32px;flex:none;display:grid;place-items:center;border-radius:8px}.rule-details summary strong{font-size:14px;letter-spacing:-.01em}.rule-chevron{margin-left:auto;color:var(--muted);font-size:20px}.rule-details[open] .rule-chevron{transform:rotate(180deg)}.rule-content{padding:0 11px 24px 50px;max-width:850px}.rule-content p{font-size:13px;line-height:1.85;color:var(--muted);margin:0 0 12px}.rule-content p strong{color:var(--ink)}.rules-points{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0 17px}.rules-points span{background:var(--soft);color:var(--secondary-ink);padding:7px 10px;font-size:11px;font-weight:700;border-radius:7px}.card-ranking{display:flex;flex-direction:column;margin:13px 0 18px;border:1px solid var(--line);border-radius:10px;overflow:hidden}.card-ranking>div{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(75px,130px);gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:center}.card-ranking>div:last-child{border:0}.card-ranking>div>span{font-size:10px;color:var(--primary-ink);font-weight:800}.card-ranking strong{font-size:11px}.card-ranking small{font-size:10px;color:var(--muted)}.rule-example{background:var(--soft);border-left:3px solid var(--primary);font-size:12px;color:var(--ink);padding:13px;margin:14px 0;border-radius:5px}.pdf-link{display:inline-block;color:var(--primary-ink);font-size:12px;font-weight:700;margin:20px 3px 32px;min-height:44px}.pdf-link:hover{text-decoration:underline}
+@media(min-width:700px),(orientation:landscape){.participant-grid{grid-template-columns:repeat(var(--wide-columns),minmax(0,1fr));grid-template-rows:repeat(var(--wide-rows),minmax(0,1fr))}.participant-block{padding:18px}.participant-heading h2{font-size:18px}.participant-lives{font-size:23px}.participant-values{gap:20px}.score-control input{font-size:clamp(40px,10vh,82px)}.participant-grid[data-count='7'] .score-control input,.participant-grid[data-count='8'] .score-control input{font-size:clamp(34px,8vh,60px);height:1.2em}.participant-grid[data-count='7'] .score-step,.participant-grid[data-count='8'] .score-step{min-height:44px}.game-toolbar{padding-left:20px;padding-right:20px}.round-actions{padding-left:20px;padding-right:20px}}
+@media(max-width:600px){.rule-list{padding:7px 16px}.rule-content{padding-left:4px}.rule-details summary{gap:12px}.settings-card{padding:18px}.participant-heading h2{font-size:13px}.participant-lives{font-size:18px}.participant-values{gap:7px}.game-toolbar>strong{font-size:16px}.participant-block{padding-left:10px;padding-right:10px}}
+@media(max-height:650px){.game-toolbar{min-height:52px;padding-top:4px;padding-bottom:4px}.round-actions{padding-top:5px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}.round-actions .button{min-height:44px}.participant-grid[data-count='7'] .participant-block,.participant-grid[data-count='8'] .participant-block{padding:5px 9px}.participant-grid[data-count='7'] .participant-heading,.participant-grid[data-count='8'] .participant-heading{min-height:20px}.participant-grid[data-count='7'] .participant-heading h2,.participant-grid[data-count='8'] .participant-heading h2{font-size:12px}.participant-grid[data-count='7'] .score-control input,.participant-grid[data-count='8'] .score-control input{font-size:26px;height:30px}.participant-grid[data-count='7'] .score-step,.participant-grid[data-count='8'] .score-step{min-height:30px}.participant-grid[data-count='7'] .score-control label,.participant-grid[data-count='8'] .score-control label{font-size:10px}.participant-grid[data-count='7'] .participant-values,.participant-grid[data-count='8'] .participant-values{padding:1px 0}.participant-status{font-size:9px;bottom:1px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+/* Com quantidade ímpar, o último bloco ocupa o espaço restante da linha. */
+
+
+/* Os nomes e o deslocamento da vez seguem o relógio nos blocos da tela. */
+.participant-block{order:var(--slot);grid-column:span var(--span)}
+.participant-block.is-dealer{background:#30241d;box-shadow:inset 0 0 0 2px var(--secondary)}
+.participant-block.is-turn{box-shadow:inset 0 0 0 3px var(--primary)}
+.participant-heading h2{flex:1}.foot-marker{flex:none;display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--on-secondary);background:var(--secondary);padding:2px 5px;border-radius:4px;margin:0}
+.is-turn .participant-status{color:var(--primary-ink);font-weight:700}.score-control input:disabled{opacity:.65}.setup-order{font-size:12px;color:var(--muted);margin-top:18px}.setup-order+.setup-players{margin-top:8px}
+@media(min-width:700px),(orientation:landscape){.participant-block{order:var(--wide-slot);grid-column:span var(--wide-span)}}
+
+/* Cores da mesa Stara. */
+.game-toolbar{background:var(--primary);color:var(--on-primary);border-bottom:3px solid var(--secondary)}.game-toolbar .cards-control{color:var(--on-primary)}.page-header{border-bottom:3px solid var(--secondary)}.page-header>strong{color:var(--primary-ink)}.participant-lives>span{color:var(--orange)}.restart-item{border-left:3px solid var(--orange);padding-left:10px;font-weight:650}
+</style>
+</head>
+<body>
+  <div id="app"><main class="startup"><h1>Fodinha</h1><p>Carregando o marcador…</p></main></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="share-dialog" class="share-dialog"><form method="dialog"><h2>Compartilhar mesa</h2><p>Quem abrir este link pode acompanhar e editar o placar.</p><input readonly aria-label="Link para compartilhar a mesa" onclick="this.select()"><p class="share-feedback" role="status"></p><p>Os celulares precisam acessar a mesma rede do servidor.</p><button class="button primary full">Fechar</button></form></dialog>
+  <script>
+    window.addEventListener('error', function (e) {
+      const el = document.getElementById('app');
+      if (el && el.textContent.includes('Carregando o marcador')) {
+        const p = document.createElement('p');
+        p.style.color = '#ffb3a8';
+        p.textContent = 'Erro ao iniciar o marcador: ' + (e.message || 'erro desconhecido');
+        el.appendChild(p);
+      }
+    });
+  </script>
+  <script>
+/** Regras do marcador baseadas no regulamento fornecido pelo usuário. */
+const MAX_PLAYERS = 8;
+const MIN_PLAYERS = 3;
+const DECK_SIZE = 40;
+const STORAGE_KEY = 'fodinha-marcador-v1';
+
+const CARD_HIERARCHY = [
+  ['1 de Espadas', 'Espadão'],
+  ['1 de Paus', 'Bastão'],
+  ['7 de Espadas', 'Manilha de Espadas'],
+  ['7 de Ouros', 'Manilha de Ouros'],
+  ['Todos os 3', 'Ternos'],
+  ['Todos os 2', 'Duques'],
+  ['1 de Copas / 1 de Ouros', 'Ases falsos'],
+  ['Todos os 12', 'Reis'],
+  ['Todos os 11', 'Cavalos'],
+  ['Todos os 10', 'Sotas'],
+  ['7 de Copas / 7 de Paus', 'Setes falsos'],
+  ['Todos os 6', 'Seis'],
+  ['Todos os 5', 'Cincos'],
+  ['Todos os 4', 'Quatros'],
+];
+
+const clone = obj => JSON.parse(JSON.stringify(obj));
+const ensure = (condition, message) => { if (!condition) throw new Error(message); };
+const uid = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
+function createGame({ names, lives = 5, criterion = 'A', dealerIndex = 0 }) {
+  const clean = names.map(s => String(s).trim()).filter(Boolean);
+  ensure(clean.length >= MIN_PLAYERS && clean.length <= MAX_PLAYERS, 'Informe de 3 a 8 jogadores.');
+  ensure(new Set(clean.map(n => n.toLocaleLowerCase('pt-BR'))).size === clean.length, 'Os jogadores precisam ter nomes diferentes.');
+  ensure(clean.every(n => n.length <= 30), 'Use nomes com até 30 caracteres.');
+  ensure(lives === 5 || lives === 3, 'As vidas iniciais devem ser 3 ou 5.');
+  ensure(criterion === 'A' || criterion === 'B', 'Critério de empate inválido.');
+  ensure(Number.isInteger(dealerIndex) && dealerIndex >= 0 && dealerIndex < clean.length, 'Carteador inválido.');
+  const players = clean.map((name, index) => ({ id: `p${index + 1}`, name, lives, position: index }));
+  return {
+    version: 1, createdAt: new Date().toISOString(), initialLives: lives, criterion,
+    players, dealerId: players[dealerIndex].id, roundNumber: 1, cards: 1,
+    capAtRoundStart: Math.floor(DECK_SIZE / players.length), direction: 'up', stage: 'bidding',
+    handPlayerIds: players.map(p => p.id), bids: {}, tricks: [], penalties: [], history: [],
+    deathmatch: false, lastSavedAt: new Date().toISOString(),
+  };
+}
+
+const playerById = (game, id) => game.players.find(p => p.id === id);
+const handPlayers = game => game.handPlayerIds.map(id => playerById(game, id)).filter(Boolean);
+const livingPlayers = game => game.players.filter(p => p.lives > 0);
+
+/** No placar, cadastre os nomes no sentido horário; o pé sempre fala por último. */
+function biddingOrder(game) {
+  const active = game.handPlayerIds;
+  const idx = active.indexOf(game.dealerId);
+  ensure(idx >= 0, 'Carteador precisa fazer parte da mão.');
+  return [...active.slice(idx + 1), ...active.slice(0, idx + 1)];
+}
+function nextBidderId(game) {
+  if (game.stage !== 'bidding') return null;
+  return biddingOrder(game).find(id => !Object.hasOwn(game.bids, id)) ?? null;
+}
+function forbiddenBid(game) {
+  const current = nextBidderId(game);
+  if (current !== game.dealerId) return null;
+  const value = game.cards - Object.values(game.bids).reduce((a, b) => a + b, 0);
+  return value >= 0 && value <= game.cards ? value : null;
+}
+function placeBid(source, playerId, value) {
+  const game = clone(source);
+  ensure(game.stage === 'bidding', 'Não estamos na fase de palpites.');
+  ensure(playerId === nextBidderId(game), 'Aguarde a vez desse jogador.');
+  ensure(Number.isInteger(value) && value >= 0 && value <= game.cards, 'Palpite fora do intervalo permitido.');
+  ensure(forbiddenBid(game) !== value, 'Regra do pé: a soma dos palpites não pode ser igual às cartas da mão.');
+  game.bids[playerId] = value;
+  if (!nextBidderId(game)) game.stage = 'tricks';
+  return game;
+}
+/** Desfaz o último palpite, apenas enquanto nenhuma vaza foi registrada. */
+function undoBid(source) {
+  const game = clone(source);
+  ensure((game.stage === 'bidding' || game.stage === 'tricks') && game.tricks.length === 0, 'Não é possível desfazer palpites depois das vazas.');
+  const placed = biddingOrder(game).filter(id => Object.hasOwn(game.bids, id));
+  ensure(placed.length, 'Não há palpite a desfazer.');
+  delete game.bids[placed.at(-1)];
+  game.stage = 'bidding';
+  return game;
+}
+
+function firstLeaderId(game) { return biddingOrder(game)[0]; }
+function trickLeaderId(game) {
+  let leader = firstLeaderId(game);
+  for (const trick of game.tricks) {
+    if (trick.winnerId) leader = trick.winnerId;
+  }
+  return leader;
+}
+function addTrick(source, winnerId) {
+  const game = clone(source);
+  ensure(game.stage === 'tricks', 'Não estamos na fase das vazas.');
+  ensure(game.tricks.length < game.cards, 'Todas as vazas já foram registradas.');
+  ensure(winnerId === null ? game.criterion === 'A' : game.handPlayerIds.includes(winnerId), 'Resultado de vaza inválido.');
+  delete game.manualResults;
+  game.tricks.push({ winnerId, openedById: trickLeaderId(game) });
+  if (game.tricks.length === game.cards) game.stage = 'review';
+  return game;
+}
+function undoTrick(source) {
+  const game = clone(source);
+  ensure((game.stage === 'tricks' || game.stage === 'review') && game.tricks.length > 0, 'Não há vaza a desfazer.');
+  game.tricks.pop();
+  game.stage = 'tricks';
+  return game;
+}
+function addPenalty(source, playerId, reason) {
+  const game = clone(source);
+  ensure(['bidding', 'tricks', 'review'].includes(game.stage), 'Não é possível penalizar nesta etapa.');
+  ensure(game.handPlayerIds.includes(playerId), 'Jogador não está nesta mão.');
+  ensure(['forehead', 'signals'].includes(reason), 'Tipo de penalidade inválido.');
+  ensure(reason !== 'forehead' || game.cards === 1, 'A infração da testa só existe em mãos de 1 carta.');
+  game.penalties.push({ playerId, reason });
+  return game;
+}
+function removeLastPenalty(source) {
+  const game = clone(source);
+  ensure(game.penalties.length > 0, 'Não há penalidades a desfazer.');
+  game.penalties.pop();
+  return game;
+}
+function redeal(source) {
+  const game = clone(source);
+  ensure(['bidding', 'tricks', 'review'].includes(game.stage), 'Esta mão não pode ser redistribuída.');
+  // O carteador perde uma vida se o erro de distribuição é percebido após iniciados os palpites.
+  if (Object.keys(game.bids).length > 0) game.penalties.push({ playerId: game.dealerId, reason: 'misdeal' });
+  game.bids = {};
+  game.tricks = [];
+  delete game.bidDraft;
+  delete game.manualResults;
+  game.stage = 'bidding';
+  return game;
+}
+/** Modo rápido: registra a quantidade final de vazas, sem indicar cada vaza individualmente. */
+function setHandTotals(source, totals) {
+  const game = clone(source);
+  ensure(game.stage === 'tricks', 'O resultado só pode ser registrado na fase das vazas.');
+  ensure(totals && typeof totals === 'object', 'Informe as vazas feitas por cada jogador.');
+  const counts = {};
+  for (const id of game.handPlayerIds) {
+    const n = totals[id];
+    ensure(Number.isInteger(n) && n >= 0 && n <= game.cards, 'Quantidade de vazas inválida.');
+    counts[id] = n;
+  }
+  const sum = Object.values(counts).reduce((a,b) => a+b, 0);
+  ensure(sum <= game.cards, 'A soma das vazas feitas não pode ultrapassar as cartas da mão.');
+  ensure(game.criterion === 'A' || sum === game.cards, 'Neste critério, toda vaza precisa ter um vencedor.');
+  game.manualResults = counts;
+  game.tricks = [];
+  game.stage = 'review';
+  return game;
+}
+function backToTricks(source) {
+  const game = clone(source);
+  ensure(game.stage === 'review', 'Não há resultado para corrigir.');
+  game.stage = 'tricks';
+  if (game.manualResults) delete game.manualResults;
+  return game;
+}
+function winsOf(game, playerId) {
+  if (game.manualResults) return game.manualResults[playerId] ?? 0;
+  return game.tricks.filter(t => t.winnerId === playerId).length;
+}
+function handResults(game) {
+  return handPlayers(game).map(p => {
+    const bid = game.bids[p.id];
+    const won = winsOf(game, p.id);
+    const difference = Math.abs(bid - won);
+    const penalty = game.penalties.filter(item => item.playerId === p.id).length;
+    const lost = difference + penalty;
+    return { id: p.id, name: p.name, bid, won, difference, penalty, lost, before: p.lives, after: Math.max(0, p.lives - lost) };
+  });
+}
+
+function nextCardCount(game, nextActiveCount) {
+  const nextCap = Math.floor(DECK_SIZE / nextActiveCount);
+  let direction = game.direction;
+  if (direction === 'up' && game.cards >= game.capAtRoundStart) direction = 'down';
+  if (direction === 'down' && game.cards <= 1) direction = 'up';
+  const cards = Math.max(1, Math.min(nextCap, game.cards + (direction === 'up' ? 1 : -1)));
+  return { cards, direction, cap: nextCap };
+}
+function nextDealer(game, activeIds) {
+  const previousPosition = game.players.findIndex(p => p.id === game.dealerId);
+  for (let i = 1; i <= game.players.length; i++) {
+    const player = game.players[(previousPosition + i) % game.players.length];
+    if (activeIds.includes(player.id)) return player.id;
+  }
+  return null;
+}
+function finalOutcome(game) {
+  const results = handResults(game);
+  const remaining = results.filter(p => p.after > 0);
+  const suddenDeath = game.handPlayerIds.length === 2 && remaining.length === 0;
+  const unregulatedTie = game.handPlayerIds.length > 2 && remaining.length === 0;
+  return { results, remaining, suddenDeath, unregulatedTie };
+}
+function settleHand(source) {
+  const game = clone(source);
+  ensure(game.stage === 'review', 'Revise a mão antes de concluir.');
+  const outcome = finalOutcome(game);
+  ensure(!outcome.unregulatedTie, 'O regulamento não determina como resolver a eliminação simultânea de 3 ou mais jogadores.');
+  const snapshot = {
+    roundNumber: game.roundNumber, cards: game.cards, dealerId: game.dealerId,
+    handPlayerIds: [...game.handPlayerIds], bids: { ...game.bids },
+    tricks: clone(game.tricks), manualResults: game.manualResults ? clone(game.manualResults) : null, penalties: clone(game.penalties), results: clone(outcome.results),
+    suddenDeath: outcome.suddenDeath, date: new Date().toISOString(),
+  };
+  game.history.unshift(snapshot);
+  for (const result of outcome.results) {
+    playerById(game, result.id).lives = outcome.suddenDeath ? 1 : result.after;
+  }
+  game.deathmatch = outcome.suddenDeath;
+  const remaining = livingPlayers(game);
+  if (remaining.length === 1) {
+    game.stage = 'finished';
+    return game;
+  }
+  const next = nextCardCount(game, remaining.length);
+  game.dealerId = nextDealer(game, remaining.map(p => p.id));
+  game.roundNumber++;
+  game.cards = next.cards;
+  game.direction = next.direction;
+  game.capAtRoundStart = next.cap;
+  game.handPlayerIds = remaining.map(p => p.id);
+  game.bids = {};
+  game.tricks = [];
+  delete game.bidDraft;
+  delete game.manualResults;
+  game.penalties = [];
+  game.stage = 'bidding';
+  return game;
+}
+/** Ajuste de mesa administrativo, usado somente para solucionar uma exceção sem previsão no PDF. */
+function adjustLives(source, playerId, lives) {
+  const game = clone(source);
+  ensure(game.players.some(p => p.id === playerId), 'Jogador não encontrado.');
+  ensure(Number.isInteger(lives) && lives >= 0 && lives <= 99, 'Informe de 0 a 99 vidas.');
+  playerById(game, playerId).lives = lives;
+  delete game.bidDraft;
+  // Jogadores corrigidos entram ou saem do placar da mão atual.
+  if (game.stage !== 'finished') {
+    game.handPlayerIds = livingPlayers(game).map(p => p.id);
+    ensure(game.handPlayerIds.length >= 2, 'Mantenha pelo menos dois jogadores; finalize pelo placar.');
+    if (!game.handPlayerIds.includes(game.dealerId)) game.dealerId = game.handPlayerIds[0];
+    for (const key of ['bids', 'totals', 'manualResults']) {
+      if (game[key]) for (const id of Object.keys(game[key])) if (!game.handPlayerIds.includes(id)) delete game[key][id];
+    }
+    game.penalties = game.penalties.filter(p => game.handPlayerIds.includes(p.playerId));
+  }
+  return game.mode === 'scoreboard' ? scoreboard(game) : game;
+}
+
+/** Placar por totais: nenhuma vaza individual precisa ser registrada. */
+function scoreboard(source) {
+  const game = clone(source);
+  game.mode = 'scoreboard';
+  game.totals ??= Object.fromEntries(game.handPlayerIds.map(id => [id, winsOf(game, id)]));
+  for (const id of Object.keys(game.totals)) if (!game.handPlayerIds.includes(id)) delete game.totals[id];
+  if (game.stage !== 'finished') game.stage = game.handPlayerIds.every(id => Object.hasOwn(game.bids, id)) ? 'tricks' : 'bidding';
+  if (game.stage === 'bidding') game.bidDraft ??= 0;
+  return game;
+}
+function changeScore(source, playerId, field, value) {
+  const game = scoreboard(source);
+  ensure(game.stage !== 'finished' && game.handPlayerIds.includes(playerId), 'Jogador fora da disputa.');
+  ensure(['bids', 'totals'].includes(field), 'Marcador inválido.');
+  ensure(Number.isInteger(value) && value >= 0 && value <= game.cards, 'Use um valor entre zero e as cartas da mão.');
+  if (field === 'bids') {
+    ensure(playerId === nextBidderId(game), 'Aguarde a vez desse jogador.');
+    game.bidDraft = value;
+  } else {
+    ensure(game.stage === 'tricks', 'Confirme todos os palpites antes de marcar o resultado.');
+    game.totals[playerId] = value;
+  }
+  return game;
+}
+function confirmScoreBid(source) {
+  const game = scoreboard(source);
+  ensure(nextBidderId(game), 'Todos os palpites já foram confirmados.');
+  ensure(Number.isInteger(game.bidDraft), 'Informe o palpite, inclusive zero.');
+  const next = placeBid(game, nextBidderId(game), game.bidDraft);
+  delete next.bidDraft;
+  return scoreboard(next);
+}
+function undoScoreBid(source) {
+  const game = scoreboard(source);
+  ensure(Object.values(game.totals).every(n => n === 0), 'Não é possível corrigir palpites após marcar o resultado.');
+  const last = biddingOrder(game).filter(id => Object.hasOwn(game.bids, id)).at(-1);
+  const next = undoBid(game);
+  next.bidDraft = game.bids[last];
+  return next;
+}
+function configureScoreHand(source, cards, dealerId) {
+  const game = scoreboard(source);
+  ensure(game.stage !== 'finished', 'A partida já terminou.');
+  ensure(Number.isInteger(cards) && cards >= 1 && cards <= Math.floor(DECK_SIZE / game.handPlayerIds.length), 'Quantidade de cartas fora do limite do baralho.');
+  ensure(game.handPlayerIds.includes(dealerId), 'Escolha um pé em jogo.');
+  ensure(dealerId === game.dealerId || Object.keys(game.bids).length === 0, 'Desfaça os palpites confirmados antes de trocar o pé.');
+  ensure([...Object.values(game.bids), ...Object.values(game.totals)].every(n => n <= cards), 'Corrija os marcadores antes de diminuir as cartas.');
+  ensure(game.bidDraft == null || game.bidDraft <= cards, 'Corrija o palpite em edição antes de diminuir as cartas.');
+  if (dealerId !== game.dealerId) delete game.bidDraft;
+  game.cards = cards;
+  game.capAtRoundStart = Math.floor(DECK_SIZE / game.handPlayerIds.length);
+  game.dealerId = dealerId;
+  return scoreboard(game);
+}
+function finishScoreHand(source) {
+  let game = scoreboard(source);
+  ensure(game.stage !== 'finished', 'A partida já terminou.');
+  ensure(game.handPlayerIds.every(id => Object.hasOwn(game.bids, id)), 'Informe o palpite de todos os jogadores, inclusive zero.');
+  ensure(Object.values(game.bids).reduce((a, b) => a + b, 0) !== game.cards, 'Regra do pé: a soma dos palpites não pode igualar as cartas da mão.');
+  const previous = clone(game);
+  delete previous.undoState;
+  game = settleHand(setHandTotals(game, Object.fromEntries(game.handPlayerIds.map(id => [id, game.totals[id] ?? 0]))));
+  if (game.stage !== 'finished') {
+    game.totals = {};
+  }
+  game.undoState = previous;
+  return scoreboard(game);
+}
+function undoScoreHand(source) {
+  ensure(source.undoState, 'Não há fechamento para desfazer.');
+  return scoreboard(source.undoState);
+}
+function verifySavedGame(data) {
+  if (!data || typeof data !== 'object' || data.version !== 1) return false;
+  if (!Array.isArray(data.players) || data.players.length < MIN_PLAYERS || data.players.length > MAX_PLAYERS) return false;
+  if (!Number.isInteger(data.roundNumber) || data.roundNumber < 1 || data.roundNumber > 100000) return false;
+  if (!Number.isInteger(data.cards) || data.cards < 1 || data.cards > 20) return false;
+  if (!Number.isInteger(data.capAtRoundStart) || data.capAtRoundStart < 1 || data.capAtRoundStart > 20) return false;
+  if (![3,5].includes(data.initialLives) || !['A','B'].includes(data.criterion)) return false;
+  if (!['up','down'].includes(data.direction)) return false;
+  if (!['bidding','tricks','review','finished'].includes(data.stage)) return false;
+  if (!Array.isArray(data.handPlayerIds) || !data.handPlayerIds.length) return false;
+  if (!data.bids || typeof data.bids !== 'object' || Array.isArray(data.bids)) return false;
+  if (!Array.isArray(data.tricks) || data.tricks.length > data.cards) return false;
+  if (data.manualResults != null && (typeof data.manualResults !== 'object' || Array.isArray(data.manualResults) ||
+      !data.handPlayerIds.every(id => Number.isInteger(data.manualResults[id]) && data.manualResults[id] >= 0 && data.manualResults[id] <= data.cards) ||
+      Object.values(data.manualResults).reduce((a,b)=>a+b, 0) > data.cards)) return false;
+  if (!Array.isArray(data.penalties) || data.penalties.length > 5000) return false;
+  if (!Array.isArray(data.history) || data.history.length > 100000) return false;
+  const playersOK = data.players.every(p => p && typeof p.id === 'string' && /^p[1-8]$/.test(p.id) &&
+    typeof p.name === 'string' && p.name.trim().length > 0 && p.name.length <= 30 &&
+    Number.isInteger(p.lives) && p.lives >= 0 && p.lives <= 99 &&
+    Number.isInteger(p.position) && p.position >= 0 && p.position < MAX_PLAYERS);
+  if (!playersOK || new Set(data.players.map(p=>p.id)).size !== data.players.length) return false;
+  const ids = data.players.map(p=>p.id);
+  if (!data.handPlayerIds.every(id => ids.includes(id)) || !(data.stage === 'finished' ? ids : data.handPlayerIds).includes(data.dealerId)) return false;
+  if (new Set(data.handPlayerIds).size !== data.handPlayerIds.length) return false;
+  if (!Object.entries(data.bids).every(([id,bid])=>data.handPlayerIds.includes(id) && Number.isInteger(bid) && bid >= 0 && bid <= data.cards)) return false;
+  if (!data.tricks.every(t=>t && (t.winnerId===null || data.handPlayerIds.includes(t.winnerId)) && data.handPlayerIds.includes(t.openedById))) return false;
+  if (!data.penalties.every(p=>p && data.handPlayerIds.includes(p.playerId) && ['forehead','signals','misdeal'].includes(p.reason))) return false;
+  if (data.totals != null && (typeof data.totals !== 'object' || Array.isArray(data.totals) || !Object.entries(data.totals).every(([id,n]) => data.handPlayerIds.includes(id) && Number.isInteger(n) && n >= 0 && n <= data.cards))) return false;
+  if (data.bidDraft != null && (!Number.isInteger(data.bidDraft) || data.bidDraft < 0 || data.bidDraft > data.cards)) return false;
+  if (data.undoState && (data.undoState.undoState || !verifySavedGame(data.undoState))) return false;
+  if (!data.history.every(h=>h && Number.isInteger(h.roundNumber) && h.roundNumber > 0 &&
+    Number.isInteger(h.cards) && h.cards >= 1 && h.cards <= 20 && ids.includes(h.dealerId) &&
+    Array.isArray(h.results) && h.results.length <= MAX_PLAYERS && h.results.every(r=>r && ids.includes(r.id) && typeof r.name === 'string' && r.name.length <= 30 &&
+      Number.isInteger(r.bid) && r.bid >= 0 && r.bid <= h.cards && Number.isInteger(r.won) && r.won >= 0 && r.won <= h.cards &&
+      r.difference === Math.abs(r.bid - r.won) && Number.isInteger(r.penalty) && r.penalty >= 0 && r.penalty <= 5000 &&
+      r.lost === r.difference + r.penalty))) return false;
+  return true;
+}
+
+const mkPlayer = (name = '') => ({ id: uid(), name });
+const defaultConfig = () => ({ ready: false, players: Array.from({ length: 4 }, () => mkPlayer()), lives: 5, criterion: 'A', dealerIndex: 0 });
+const blankStore = () => ({ version: 2, config: defaultConfig(), game: null, records: [] });
+const textValue = (value, max = 100) => typeof value === 'string' && value.length > 0 && value.length <= max;
+const validConfig = c => c && typeof c.ready === 'boolean' && Array.isArray(c.players) && c.players.length >= 3 && c.players.length <= 8 &&
+ c.players.every(p => p && textValue(p.id) && typeof p.name === 'string' && p.name.length <= 30) &&
+ new Set(c.players.map(p => p.id)).size === c.players.length && [3, 5].includes(c.lives) && ['A', 'B'].includes(c.criterion) &&
+ Number.isInteger(c.dealerIndex) && c.dealerIndex >= 0 && c.dealerIndex < c.players.length &&
+ (!c.ready || (c.players.every(p => p.name.trim()) && new Set(c.players.map(p => p.name.trim().toLocaleLowerCase('pt-BR'))).size === c.players.length));
+const nonnegative = n => Number.isSafeInteger(n) && n >= 0 && n <= 100000;
+function validStore(s) {
+ try {
+  return !!(s && s.version === 2 && validConfig(s.config) && (s.game === null || verifySavedGame(s.game)) &&
+   Array.isArray(s.records) && s.records.length <= 10000 && new Set(s.records.map(r => r.id)).size === s.records.length &&
+   s.records.every(r => r && textValue(r.id) && textValue(r.finishedAt) && Number.isFinite(Date.parse(r.finishedAt)) &&
+    Array.isArray(r.participants) && r.participants.length >= 3 && r.participants.length <= 8 &&
+    r.participants.every(p => p && textValue(p.id) && textValue(p.name, 30)) && new Set(r.participants.map(p => p.id)).size === r.participants.length &&
+    r.participants.some(p => p.id === r.winnerId) && Array.isArray(r.originalIds) && r.originalIds.length === r.participants.length &&
+    r.originalIds.every(p => p && /^p[1-8]$/.test(p.gameId) && r.participants.some(x => x.id === p.profileId)) &&
+    new Set(r.originalIds.map(p => p.gameId)).size === r.originalIds.length && new Set(r.originalIds.map(p => p.profileId)).size === r.originalIds.length &&
+    Array.isArray(r.hands) && r.hands.length <= 100000 && r.hands.every(h => h && Array.isArray(h.results) &&
+     h.results.length <= 8 && h.results.every(x => x && r.originalIds.some(p => p.gameId === x.id) && textValue(x.name, 30) &&
+      [x.bid, x.won, x.lost, x.difference].every(nonnegative)))));
+ } catch { return false; }
+}
+
+const APP_KEY = 'fodinha-marcador-v2';
+const ROOM_KEY = 'fodinha-mesa-servidor';
+const root = document.getElementById('app');
+const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const deepClone = value => JSON.parse(JSON.stringify(value));
+let store = blankStore(), draft = deepClone(store.config), tab = 'config';
+let token = '', revision = 0, pending = null, saving = false, conflict = false, connected = false;
+let status = 'Conectando…', startupError = '', shareOrigin = '', toastTimeout;
+const game = () => store.game;
+const activePeople = () => game().handPlayerIds.map(id => playerById(game(), id));
+const countWord = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+function showToast(text, isError = false) {
+ const t = document.getElementById('toast');
+ t.textContent = text; t.classList.toggle('error', isError); t.hidden = false;
+ clearTimeout(toastTimeout); toastTimeout = setTimeout(() => t.hidden = true, 4200);
+}
+async function request(url, options = {}) {
+ const response = await fetch(url, { ...options, cache:'no-store', headers:{ 'Content-Type':'application/json', ...(token ? { Authorization:`Bearer ${token}` } : {}), ...options.headers }, signal:AbortSignal.timeout(10000) });
+ const data = await response.json();
+ if (!response.ok) throw Object.assign(new Error(data.error || 'Não foi possível salvar.'), { status:response.status });
+ return data;
+}
+function syncStatus() {
+ const el = document.getElementById('sync-state'); if (el) el.textContent = status;
+ const banner = document.getElementById('connection-banner');
+ if (banner) banner.innerHTML = conflict
+  ? `<div class="connection-warning"><strong>A mesa mudou em outro celular.</strong><p>Exporte seus ajustes se precisar guardá-los e carregue o placar salvo para continuar.</p>${action('Exportar meus ajustes','export','text-button')}${action('Carregar placar salvo','reload-server','button quiet')}</div>`
+  : !connected && pending ? `<div class="connection-warning"><strong>Alterações ainda não salvas.</strong><p>Mantenha esta página aberta. Tentaremos novamente ao reconectar.</p>${action('Tentar salvar','retry-save','button quiet')}${action('Exportar backup','export','text-button')}</div>` : '';
+}
+function persist() { pending = deepClone(store); flush(); }
+async function flush() {
+ if (saving || conflict || !token || !pending) return;
+ saving = true; status = 'Salvando…'; syncStatus();
+ try {
+  while (pending) {
+   const snapshot = pending; pending = null;
+   try { const result = await request('/api/table', { method:'PUT', body:JSON.stringify({ revision, state:snapshot }) }); revision = result.revision; }
+   catch (error) { pending ??= snapshot; throw error; }
+  }
+  connected = true; status = 'Salvo no banco';
+ } catch (error) { connected = false; conflict = error.status === 409; status = conflict ? 'Revisar conflito' : 'Não salvo'; showToast(error.message || 'Sem conexão com o servidor.', true); }
+ finally { saving = false; syncStatus(); }
+}
+async function poll() {
+ if (!token || saving || pending || conflict || !connected || document.hidden || tab === 'config') return;
+ try {
+  const result = await request('/api/table');
+  if (saving || pending || conflict) return;
+  connected = true; status = 'Salvo no banco'; syncStatus();
+  if (result.revision <= revision) return;
+  if (!validStore(result.state)) throw new Error('Dados recebidos inválidos.');
+  store = result.state; revision = result.revision;
+  if (store.game) store.game = scoreboard(store.game);
+  if (tab !== 'config') render();
+ } catch { status = 'Verificando conexão…'; syncStatus(); }
+}
+function legacyImport(src) {
+ if (!verifySavedGame(src)) throw new Error('Arquivo de backup inválido.');
+ const config = {ready:true, players:src.players.map(p => mkPlayer(p.name)), lives:src.initialLives, criterion:src.criterion, dealerIndex:src.players.findIndex(p => p.id === src.dealerId)};
+ src.players.forEach((p,i) => p.profileId = config.players[i].id); src.id ||= uid();
+ return {version:2, config, game:src, records:[]};
+}
+function readLegacy() {
+ try { const s = JSON.parse(localStorage.getItem(APP_KEY) || 'null'); if (validStore(s)) return s; } catch {}
+ try { const g = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); if (g) return legacyImport(g); } catch {}
+ return blankStore();
+}
+async function boot() {
+ startupError = ''; renderLoading();
+ try {
+  if (location.protocol === 'file:') throw new Error('Execute npm run dev e abra http://localhost:3000 para usar o banco de dados.');
+  const hashToken = new URLSearchParams(location.hash.slice(1)).get('mesa');
+  try { token = hashToken || localStorage.getItem(ROOM_KEY) || ''; } catch { token = hashToken || ''; }
+  if (token && !/^[a-f0-9]{32}$/.test(token)) throw new Error('Link de mesa inválido. Confira o link compartilhado.');
+  const result = token ? await request('/api/table') : await request('/api/tables', {method:'POST', body:JSON.stringify({state:readLegacy()})});
+  if (!validStore(result.state)) throw new Error('Os dados salvos não são compatíveis.');
+  token = result.token || token; revision = result.revision; store = result.state;
+  if (store.game) store.game = scoreboard(store.game);
+  try { localStorage.setItem(ROOM_KEY, token); } catch {}
+  history.replaceState(null, '', `#mesa=${token}`);
+  draft = deepClone(store.config); tab = store.game ? 'jogo' : 'config';
+  connected = true; status = 'Salvo no banco'; render();
+  try { const info = await request('/api/info'); shareOrigin = ['localhost','127.0.0.1'].includes(location.hostname) ? info.addresses[0] || location.origin : location.origin; } catch { shareOrigin = location.origin; }
+ } catch (error) { startupError = error.message || 'Não foi possível conectar ao servidor.'; renderLoading(); }
+}
+function renderLoading() {
+ root.innerHTML = `<main class="startup"><h1>Fodinha</h1><p>${escapeHTML(startupError || 'Carregando a mesa…')}</p>${startupError ? action('Tentar novamente','retry-boot','button primary') : ''}</main>`;
+}
+function commit(next, success) {
+ store.game = next; persist(); render(); if (success) showToast(success);
+}
+function startNew() {
+ const c = store.config;
+ if (!c.ready) throw new Error('Informe os jogadores primeiro.');
+ const g = scoreboard(createGame({names:c.players.map(p => p.name), lives:c.lives, criterion:c.criterion, dealerIndex:c.dealerIndex}));
+ g.id = uid(); g.players.forEach((p,i) => p.profileId = c.players[i].id);
+ tab = 'jogo'; commit(g);
+}
+function navigate(next) {
+ tab = next === 'jogo' && !game() ? 'config' : next;
+ if (tab === 'config') draft = deepClone(store.config);
+ render(true);
+}
+function action(label, act, klass = '', extra = '') {
+ return `<button type="button" class="${klass}" data-action="${act}" ${extra}>${label}</button>`;
+}
+function pageTitle(kicker, title, description = '') {
+ return `<div class="page-intro"><h1>${title}</h1>${description ? `<p>${description}</p>` : ''}</div>`;
+}
+function header() {
+ return `<header class="page-header">${game() ? action('← Voltar','show-game','text-button') : '<strong>Fodinha</strong>'}${tab === 'regras' ? action('Configurar partida','edit-config','text-button') : action('Regras','show-rules','text-button')}</header>`;
+}
+const scoreValue = (g,id,field) => (field === 'bids' && id === nextBidderId(g) ? g.bidDraft : g[field]?.[id]) ?? 0;
+const scoreLocked = (g,id,field) => g.stage === 'finished' || !g.handPlayerIds.includes(id) || (field === 'bids' ? id !== nextBidderId(g) : g.stage !== 'tricks');
+function scoreControl(g, p, field, disabled) {
+ const val = scoreValue(g,p.id,field), label = field === 'bids' ? 'Palpite' : 'Fez';
+ disabled ||= scoreLocked(g,p.id,field);
+ return `<div class="score-control"><label for="${field}-${p.id}">${label}</label><input id="${field}-${p.id}" type="number" inputmode="numeric" min="0" max="${g.cards}" step="1" value="${val ?? (field === 'totals' ? 0 : '')}" placeholder="—" data-score-id="${p.id}" data-score-field="${field}" aria-label="${label} de ${escapeHTML(p.name)}" ${disabled ? 'disabled' : ''}><div class="counter-buttons">${action('−','score-step','score-step',`data-id="${p.id}" data-field="${field}" data-delta="-1" aria-label="Diminuir ${label.toLowerCase()} de ${escapeHTML(p.name)}" ${disabled || val === 0 ? 'disabled' : ''}`)}${action('+','score-step','score-step',`data-id="${p.id}" data-field="${field}" data-delta="1" aria-label="Aumentar ${label.toLowerCase()} de ${escapeHTML(p.name)}" ${disabled || val >= g.cards ? 'disabled' : ''}`)}</div></div>`;
+}
+function renderMenu(g) {
+ const active = activePeople();
+ return `<dialog id="menu-dialog" class="menu-dialog"><div class="menu-heading"><h2>Menu</h2>${action('×','close-menu','icon-button','aria-label="Fechar menu"')}</div><div class="menu-items">${action('Regras','show-rules','menu-item')}${action('Reiniciar jogo','restart','menu-item restart-item')}${action('Configurar nova partida','edit-config','menu-item')}${g.undoState ? action('Desfazer última rodada','undo-settle','menu-item') : ''}${g.stage !== 'finished' && Object.keys(g.bids).length && Object.values(g.totals).every(n => n === 0) ? action('Desfazer último palpite','undo-score-bid','menu-item') : ''}${g.stage !== 'finished' ? `<details class="menu-corrections"><summary>Ajustes da rodada</summary><label class="field-caption" for="hand-dealer">Pé da rodada</label><select id="hand-dealer" class="select-input">${active.map(p => `<option value="${p.id}" ${p.id === g.dealerId ? 'selected' : ''}>${escapeHTML(p.name)}</option>`).join('')}</select>${action('Corrigir vidas','toggle-lives','menu-item')}${action('Aplicar penalidade','toggle-penalty','menu-item')}${action('Redistribuir cartas','redeal','menu-item')}<div id="admin-detail"></div></details>` : ''}<details class="menu-corrections"><summary>Dados da mesa</summary>${action('Compartilhar mesa','share','menu-item')}${action('Exportar backup','export','menu-item')}${action('Importar backup','import','menu-item')}<span id="sync-state" class="sync-state">${status}</span></details></div></dialog>`;
+}
+function roundStatus(g) {
+ const active = g.handPlayerIds.map(id => playerById(g,id)), finished = g.stage === 'finished';
+ const turn = nextBidderId(g);
+ if (turn) {
+  const name = playerById(g,turn).name, forbidden = forbiddenBid(g);
+  const issue = !Number.isInteger(g.bidDraft) ? `Informe o palpite de ${name}, inclusive zero.` : forbidden !== null && forbidden === g.bidDraft ? `O pé não pode pedir ${forbidden}: a soma igualaria as cartas.` : '';
+  return {turn,issue,message:issue || `Vez de ${name}${turn === g.dealerId ? ' · Pé, último a falar' : ''}`};
+ }
+ const missing = active.filter(p => !Object.hasOwn(g.bids,p.id)).length;
+ const total = active.reduce((sum,p) => sum + (g.totals[p.id] ?? 0),0);
+ const bids = active.reduce((sum,p) => sum + (g.bids[p.id] ?? 0),0);
+ const issue = missing ? `Informe ${countWord(missing,'palpite','palpites')}, inclusive zero.` : bids === g.cards ? 'A soma dos palpites não pode ser igual às cartas.' : total > g.cards ? 'O total feito ultrapassa as cartas.' : g.criterion === 'B' && total !== g.cards ? 'O total feito deve ser igual às cartas.' : '';
+ const message = finished ? `${livingPlayers(g)[0].name} venceu a partida.` : issue || (total < g.cards ? `${g.cards-total} ${g.cards-total === 1 ? 'vaza melada' : 'vazas meladas'}` : g.deathmatch ? 'Morte súbita · 1 vida para cada finalista' : '');
+ return {turn:null,issue,message};
+}
+function syncBoard() {
+ const g = game(), {turn,issue,message} = roundStatus(g);
+ const note = root.querySelector('#round-message'); if (note) note.textContent = message;
+ const finish = root.querySelector(turn ? '[data-action="confirm-bid"]' : '[data-action="finish-score"]'); if (finish) finish.disabled = !!issue || conflict;
+ for (const b of root.querySelectorAll('[data-action="score-step"]')) {
+  const {id,field,delta} = b.dataset, value = scoreValue(g,id,field);
+  b.disabled = conflict || scoreLocked(g,id,field) || (Number(delta) < 0 ? value === 0 : value >= g.cards);
+ }
+}
+function clockwiseSlots(count,columns) {
+ const rows = Math.ceil(count/columns), slots = [];
+ const width = row => Math.min(columns,count-row*columns);
+ const add = (row,column) => { const slot = row*columns+column; if (!slots.includes(slot)) slots.push(slot); };
+ for (let c=0;c<width(0);c++) add(0,c);
+ for (let r=1;r<rows;r++) add(r,width(r)-1);
+ for (let c=width(rows-1)-2;c>=0;c--) add(rows-1,c);
+ for (let r=rows-2;r>0;r--) add(r,0);
+ return slots;
+}
+function renderGame() {
+ const g = game(); if (!g) return renderSettings();
+ const active = activePeople(), finished = g.stage === 'finished';
+ const {turn,issue,message} = roundStatus(g);
+ const count = g.players.length, columns = count <= 3 ? 1 : 2, wideColumns = count <= 3 ? count : count <= 4 ? 2 : count <= 6 ? 3 : 4;
+ const winner = finished ? livingPlayers(g)[0] : null;
+ const slots = clockwiseSlots(count,columns), wideSlots = clockwiseSlots(count,wideColumns);
+ return `<div class="game-shell"><header class="game-toolbar">${action('☰ <span>Menu</span>','open-menu','menu-button','aria-label="Abrir menu"')}<strong>Fodinha</strong><label class="cards-control" for="hand-cards"><span>Cartas</span><select id="hand-cards" aria-label="Quantidade de cartas da rodada" ${finished || conflict ? 'disabled' : ''}>${Array.from({length:Math.floor(40/active.length)},(_,i) => `<option value="${i+1}" ${g.cards === i+1 ? 'selected' : ''}>${i+1}</option>`).join('')}</select></label></header><div id="connection-banner"></div><main class="participant-grid" data-count="${count}" aria-label="Placar dos ${count} participantes" style="--columns:${columns};--rows:${Math.ceil(count/columns)};--wide-columns:${wideColumns};--wide-rows:${Math.ceil(count/wideColumns)}">${g.players.map(p => {
+  const out = p.lives === 0, disabled = out || finished || conflict;
+  const index = g.players.indexOf(p), dealer = p.id === g.dealerId && !finished;
+  const span = columns > 1 && count % columns && slots[index] === count-1 ? 2 : 1;
+  const wideSpan = wideColumns > 1 && count % wideColumns && wideSlots[index] === count-1 ? 2 : 1;
+  return `<section class="participant-block ${out ? 'is-out' : ''} ${winner?.id === p.id ? 'is-winner' : ''} ${dealer ? 'is-dealer' : ''} ${p.id === turn ? 'is-turn' : ''}" style="--slot:${slots[index]};--wide-slot:${wideSlots[index]};--span:${span};--wide-span:${wideSpan}" aria-label="Placar de ${escapeHTML(p.name)}"><div class="participant-heading"><h2 title="${escapeHTML(p.name)}">${escapeHTML(p.name)}</h2>${dealer ? '<span class="foot-marker">PÉ</span>' : ''}<span class="participant-lives" aria-label="${p.lives} vidas restantes"><span aria-hidden="true">♥</span> ${p.lives}</span></div><div class="participant-values">${scoreControl(g,p,'bids',disabled)}${scoreControl(g,p,'totals',disabled)}</div>${out ? '<span class="participant-status">Eliminado</span>' : winner?.id === p.id ? '<span class="participant-status">Vencedor</span>' : p.id === turn ? '<span class="participant-status">Sua vez</span>' : ''}</section>`;
+ }).join('')}</main><footer class="round-actions"><p id="round-message" role="status">${escapeHTML(message)}</p>${finished ? action('Nova partida','edit-config','button primary full') : turn ? action('Confirmar palpite','confirm-bid','button primary full',issue || conflict ? 'disabled' : '') : action('Finalizar rodada','finish-score','button primary full',issue || conflict ? 'disabled' : '')}</footer>${renderMenu(g)}</div>`;
+}
+function renderSettings() {
+ const c = draft;
+ return `<div class="settings-wrap">${pageTitle('','Nova partida')}<form id="config-form" class="settings-card"><label class="field-caption" for="player-count">Quantidade de jogadores</label><select id="player-count" name="playerCount" class="select-input">${Array.from({length:6},(_,i) => `<option value="${i+3}" ${c.players.length === i+3 ? 'selected' : ''}>${i+3} jogadores</option>`).join('')}</select><p class="setup-order">Nomes em sentido horário ↻</p><div class="setup-players">${c.players.map((p,i) => `<label class="setup-row"><span>${i+1}</span><input required maxlength="30" name="player-${i}" data-player-name="${i}" placeholder="Nome do jogador" autocomplete="off" value="${escapeHTML(p.name)}" aria-label="Nome do jogador ${i+1}"></label>`).join('')}</div><div class="settings-options"><label>Vidas iniciais<select name="lives" class="select-input"><option value="5" ${c.lives === 5 ? 'selected' : ''}>5 vidas</option><option value="3" ${c.lives === 3 ? 'selected' : ''}>3 vidas</option></select></label><label>Critério de desempate<select name="criterion" class="select-input"><option value="A" ${c.criterion === 'A' ? 'selected' : ''}>Vaza melada</option><option value="B" ${c.criterion === 'B' ? 'selected' : ''}>Primeiro a jogar ganha</option></select></label></div><label class="field-caption" for="dealer">Primeiro pé</label><select id="dealer" name="dealerIndex" class="select-input">${c.players.map((p,i) => `<option value="${i}" ${i === c.dealerIndex ? 'selected' : ''}>${escapeHTML(p.name || 'Jogador '+(i+1))}</option>`).join('')}</select><button type="submit" class="button primary full">Iniciar partida</button></form></div>`;
+}
+function render(scrollTop = false) {
+ const y = window.scrollY, playing = tab === 'jogo' && !!game();
+ root.innerHTML = `${playing ? renderGame() : `${header()}<main class="page-main"><div id="connection-banner"></div>${tab === 'regras' ? renderRules() : renderSettings()}</main>`}<input hidden type="file" id="import-file" accept="application/json,.json">`;
+ syncStatus();
+ if (scrollTop) window.scrollTo(0,0); else if (y > 0) window.scrollTo(0,y);
+}
+
+function renderRules(){
+ const groups=[
+ ['Visão geral',`<p>Este é o regulamento adotado pelos amigos da Stara. O Fodinha tem variações entre mesas. Na aplicação, os palpites seguem em sentido horário, conforme combinado; o PDF descreve sentido anti-horário.</p><p>O último jogador com vidas vence. A cada mão, cada participante promete quantas vazas vai ganhar; acertar exatamente mantém suas vidas.</p><div class="rules-points"><span>3 a 8 jogadores</span><span>Baralho espanhol de 40 cartas</span><span>5 vidas (ou 3 na partida rápida)</span><span>Sentido horário na aplicação</span></div><p>Use Espadas, Bastos (Paus), Copas e Ouros, sem 8, 9 ou curingas.</p>`],
+ ['Força das cartas',`<p>Não há vira nem manilha móvel. Ordem da mais forte à mais fraca:</p><div class="card-ranking">${CARD_HIERARCHY.map(([card,title],i)=>`<div><span>${String(i+1).padStart(2,'0')}</span><strong>${escapeHTML(card)}</strong><small>${escapeHTML(title)}</small></div>`).join('')}</div><p>Cartas do mesmo nível empatam independentemente do naipe.</p>`],
+ ['Mãos e distribuição',`<p>Primeira mão: 1 carta por jogador. Depois 2, 3, 4… até o máximo de <strong>⌊40 ÷ jogadores ativos⌋</strong>. Em seguida, desce uma carta por mão até 1 e reinicia o ciclo se ainda houver disputa.</p><p>O primeiro carteador é sorteado pela carta mais forte. Na aplicação, o pé passa ao próximo jogador ativo em sentido horário a cada mão. Quem está à esquerda do pé corta o baralho (ou dá toque).</p>`],
+ ['Rodada da testa',`<p>Nas mãos de <strong>1 carta</strong>, ninguém pode olhar a própria carta. Cada jogador põe a carta na testa com a face para os outros.</p><p>Olhar a própria carta antes de jogá-la custa <strong>1 vida</strong> de penalidade.</p>`],
+ ['Palpites e regra do pé',`<p>Na aplicação, começa o próximo jogador ativo no sentido horário após o pé, pedindo de 0 até o número de cartas. Confirme cada palpite para liberar o seguinte, sempre em sentido horário. O <strong>pé pede por último</strong>.</p><p><strong>A soma de todos os palpites não pode ser igual à quantidade de cartas da mão.</strong> Apenas o palpite do pé é limitado para impedir isso. Os palpites feitos não podem ser alterados.</p><div class="rule-example">Ex.: 3 cartas, três jogadores pediram 1 + 1 + 0 = 2. O pé não pode pedir 1.</div>`],
+ ['Como funcionam as vazas',`<p>Na primeira vaza, começa quem abriu os palpites. Todos descartam uma carta aberta, seguindo a ordem combinada pela mesa, sem obrigação de seguir o naipe. A maior carta vence; quem venceu abre a próxima.</p><p><strong>Critério A — Melada (padrão):</strong> se as cartas de maior força empatarem, ninguém ganha a vaza. Quem abriu começa a próxima. Uma carta mais forte jogada depois desfaz o empate.</p><p><strong>Critério B — Primeiro a jogar:</strong> em empate das cartas mais fortes, ganha quem jogou primeiro. Escolha a variação na configuração da mesa.</p>`],
+ ['Vidas e eliminação',`<p>Quem acerta exatamente o palpite não perde vida, inclusive quando pede zero e faz zero.</p><p>Quem erra perde <strong>1 vida por vaza de diferença</strong>, para mais ou para menos. Ex.: pediu 2, fez 0 → perde 2 vidas.</p><p>Quem chega a 0 ou menos é eliminado da mão seguinte; o teto de cartas é recalculado. Quando sobra um jogador, ele vence.</p><p>Com <strong>2 finalistas</strong>, se ambos zerarem na mesma mão, voltam com 1 vida cada para morte súbita.</p>`],
+ ['Exceções e penalidades',`<p><strong>Distribuição errada:</strong> se percebida antes dos palpites, redistribui sem penalidade; depois de começar os palpites, o pé perde 1 vida e redistribui.</p><p><strong>Carta virada na distribuição:</strong> redistribui. Se o jogador expuser sua carta depois de recebê-la, a mão segue.</p><p><strong>Jogar fora da vez:</strong> a carta fica aberta aguardando o turno, sem voltar à mão.</p><p><strong>Combinar sinais:</strong> os envolvidos perdem 1 vida cada.</p><p><strong>Duelo final:</strong> a regra do pé segue valendo. O PDF não define um desempate para a eliminação simultânea de 3 ou mais jogadores.</p>`],
+ ];
+ return `<div class="content-wrap">${pageTitle('CONSULTA RÁPIDA','Regras do Fodinha','Nosso combinado: regulamento fornecido pela mesa, com baralho espanhol de truco.')}<section class="rule-list">${groups.map(([title,html],i)=>`<details class="rule-details" ${i===0?'open':''}><summary><span class="rule-index">${String(i+1).padStart(2,'0')}</span><strong>${title}</strong><span class="rule-chevron">⌄</span></summary><div class="rule-content">${html}</div></details>`).join('')}</section><a class="pdf-link" href="./docs/regulamento_fodinha.pdf" target="_blank" rel="noopener noreferrer">↗ Abrir regulamento original em PDF</a></div>`;
+}
+function saveBackup() {
+ const url = URL.createObjectURL(new Blob([JSON.stringify(store,null,2)], {type:'application/json'}));
+ const a = document.createElement('a'); a.href = url; a.download = `fodinha-backup-${new Date().toISOString().slice(0,10)}.json`;
+ document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url),2000); showToast('Backup exportado.');
+}
+async function shareTable() {
+ const link = `${shareOrigin || location.origin}${location.pathname}#mesa=${token}`;
+ const dialog = document.getElementById('share-dialog');
+ dialog.querySelector('input').value = link;
+ dialog.showModal();
+ try { await navigator.clipboard.writeText(link); dialog.querySelector('.share-feedback').textContent = 'Link copiado! Envie para os amigos.'; }
+ catch { dialog.querySelector('.share-feedback').textContent = 'Selecione e copie o link abaixo.'; }
+}
+function editPenalty() { return `<form id="penalty-form" class="nested-form"><label>Jogador<select name="playerId">${activePeople().map(p => `<option value="${p.id}">${escapeHTML(p.name)}</option>`).join('')}</select></label><label>Motivo<select name="reason"><option value="signals">Sinais combinados</option>${game().cards === 1 ? '<option value="forehead">Olhou a carta da testa</option>' : ''}</select></label><button type="submit" class="button primary">Registrar −1 no fechamento</button>${game().penalties.length ? action('Desfazer penalidade','undo-penalty','text-button') : ''}</form>`; }
+function editLives() { return `<form id="lives-form" class="nested-form"><p>Ajuste para corrigir uma marcação. Mantenha pelo menos dois jogadores; o campeão é definido ao finalizar a vaza.</p>${game().players.map(p => `<label>${escapeHTML(p.name)}<input type="number" min="0" max="99" name="life-${p.id}" value="${p.lives}" required></label>`).join('')}<button type="submit" class="button primary">Salvar vidas</button></form>`; }
+root.addEventListener('input', e => {
+ const idx = e.target?.dataset?.playerName;
+ if (idx !== undefined) { draft.players[Number(idx)].name = e.target.value; const option = root.querySelector(`#dealer option[value="${idx}"]`); if (option) option.textContent = e.target.value.trim() || `Jogador ${Number(idx)+1}`; }
+});
+root.addEventListener('change', async e => {
+ try {
+  if (conflict) { render(); throw new Error('Carregue o placar salvo antes de editar.'); }
+  if (e.target.name === 'playerCount') {
+   const count = Number(e.target.value);
+   if (!Number.isInteger(count) || count < 3 || count > 8) throw new Error('Escolha de 3 a 8 jogadores.');
+   while (draft.players.length < count) draft.players.push(mkPlayer());
+   draft.players = draft.players.slice(0,count);
+   if (draft.dealerIndex >= count) draft.dealerIndex = 0;
+   render();
+  }
+  if (e.target.name === 'lives') draft.lives = Number(e.target.value);
+  if (e.target.name === 'criterion') draft.criterion = e.target.value;
+  if (e.target.name === 'dealerIndex') draft.dealerIndex = Number(e.target.value);
+  if (e.target.dataset.scoreId) {
+   const {scoreId,scoreField} = e.target.dataset;
+   if (e.target.value === '') { e.target.value = scoreValue(game(),scoreId,scoreField) ?? ''; return; }
+   store.game = changeScore(game(),scoreId,scoreField,Number(e.target.value));
+   e.target.value = String(Number(e.target.value)); persist(); syncBoard();
+  }
+  if (e.target.id === 'hand-cards') commit(configureScoreHand(game(),Number(e.target.value),game().dealerId));
+  if (e.target.id === 'hand-dealer') commit(configureScoreHand(game(),game().cards,e.target.value));
+  if (e.target.id === 'import-file') {
+   const file = e.target.files?.[0]; if (!file) return;
+   if (file.size > 4 * 1024 * 1024) throw new Error('Use um backup de até 4 MB.');
+   const obj = JSON.parse(await file.text()); const parsed = obj.version === 2 ? obj : legacyImport(obj);
+   if (!validStore(parsed)) throw new Error('Backup incompatível ou inválido.');
+   if (!confirm('Restaurar backup nesta mesa? Os dados salvos serão substituídos para todos que usam o link.')) return;
+   store = parsed; if (store.game) store.game = scoreboard(store.game); draft = deepClone(store.config); tab = store.game ? 'jogo' : 'config'; persist(); render(true); showToast('Backup restaurado.');
+  }
+ } catch (error) {
+  if (e.target.dataset.scoreId) e.target.value = scoreValue(game(),e.target.dataset.scoreId,e.target.dataset.scoreField) ?? '';
+  if (['hand-cards','hand-dealer'].includes(e.target.id)) render();
+  showToast(error.message || 'Não foi possível salvar.',true);
+ }
+});
+root.addEventListener('submit', e => {
+ e.preventDefault();
+ try {
+  if (conflict) throw new Error('Carregue o placar salvo antes de editar.');
+  if (e.target.id === 'config-form') {
+   draft.players.forEach(p => p.name = p.name.trim()); draft.ready = true;
+   if (!validConfig(draft)) throw new Error('Preencha todos os nomes, sem repetir jogadores.');
+   if (game() && game().stage !== 'finished' && !confirm('Encerrar a partida atual e iniciar outra com esta configuração?')) return;
+   store.config = deepClone(draft); startNew();
+  } else if (e.target.id === 'penalty-form') {
+   const d = new FormData(e.target); commit(addPenalty(game(),d.get('playerId'),d.get('reason')),'Penalidade será aplicada no fechamento.');
+  } else if (e.target.id === 'lives-form') {
+   const d = new FormData(e.target), updated = deepClone(game());
+   for (const p of updated.players) p.lives = Number(d.get('life-'+p.id));
+   // Aplica o lote inteiro antes de recalcular os jogadores ativos.
+   const result = adjustLives(updated,updated.players[0].id,updated.players[0].lives);
+   if (!verifySavedGame(result)) throw new Error('Informe vidas inteiras entre 0 e 99.');
+   commit(result,'Vidas corrigidas.');
+  }
+ } catch (error) { showToast(error.message || 'Não foi possível salvar.',true); }
+});
+root.addEventListener('click', async e => {
+ const b = e.target.closest('[data-action]'); if (!b || b.disabled) return;
+ const act = b.dataset.action;
+ try {
+  if (conflict && !['show-game','show-rules','open-menu','close-menu','edit-config','reload-server','export','share'].includes(act)) throw new Error('Carregue o placar salvo antes de continuar.');
+  switch (act) {
+   case 'retry-boot': await boot(); break;
+   case 'retry-save': await flush(); break;
+   case 'reload-server': {
+    if (!confirm('Carregar o placar salvo? Seus ajustes ainda não salvos serão descartados. Exporte-os primeiro se precisar.')) break;
+    const result = await request('/api/table'); if (!validStore(result.state)) throw new Error('Dados recebidos inválidos.');
+    pending = null; store = result.state; revision = result.revision; conflict = false; connected = true; status = 'Salvo no banco';
+    if (store.game) store.game = scoreboard(store.game); draft = deepClone(store.config); render(); break;
+   }
+   case 'show-game': navigate('jogo'); break;
+   case 'show-rules': navigate('regras'); break;
+   case 'open-menu': root.querySelector('#menu-dialog').showModal(); break;
+   case 'close-menu': root.querySelector('#menu-dialog').close(); break;
+   case 'edit-config': navigate('config'); break;
+   case 'restart': if (confirm('Deseja realmente iniciar um novo jogo?')) startNew(); break;
+   case 'share': await shareTable(); break;
+   case 'score-step': {
+    const {id,field,delta} = b.dataset, current = scoreValue(game(),id,field);
+    commit(changeScore(game(),id,field,current == null ? (Number(delta) < 0 ? 0 : 1) : current + Number(delta))); break;
+   }
+   case 'confirm-bid': commit(confirmScoreBid(game())); break;
+   case 'undo-score-bid': commit(undoScoreBid(game()),'Último palpite aberto para correção.'); break;
+   case 'finish-score': {
+    commit(finishScoreHand(game()),'Rodada finalizada.'); break;
+   }
+   case 'undo-settle': {
+    if (!confirm('Desfazer o último fechamento e restaurar as vidas e os marcadores anteriores?')) break;
+    const g = game(), previous = undoScoreHand(g); store.records = store.records.filter(r => r.id !== g.id); commit(previous,'Fechamento desfeito.'); break;
+   }
+   case 'redeal': if (confirm('Redistribuir? Após o primeiro palpite, o pé recebe −1 vida no fechamento.')) { const next = redeal(game()); next.totals = {}; commit(scoreboard(next),'Marcadores zerados.'); } break;
+   case 'toggle-penalty': root.querySelector('#admin-detail').innerHTML = editPenalty(); break;
+   case 'toggle-lives': root.querySelector('#admin-detail').innerHTML = editLives(); break;
+   case 'undo-penalty': commit(removeLastPenalty(game()),'Penalidade removida.'); break;
+   case 'import': root.querySelector('#import-file')?.click(); break;
+   case 'export': saveBackup(); break;
+  }
+ } catch (error) { showToast(error.message || 'Não foi possível realizar a ação.',true); }
+});
+window.addEventListener('online', () => { if (pending) flush(); else poll(); });
+window.addEventListener('beforeunload', e => { if (pending || saving) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('hashchange', () => location.reload());
+setInterval(() => { if (pending && !conflict) flush(); else poll(); },4000);
+boot();
+
+
+
+
+  </script>
+</body>
+</html>
